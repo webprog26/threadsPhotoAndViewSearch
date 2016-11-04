@@ -1,10 +1,12 @@
 package com.example.webprog26.multithreadingfirsttask;
 
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
+import android.widget.ImageView;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -57,6 +59,7 @@ public class PicsDownloader<T> extends HandlerThread {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
+                Log.i(TAG, "Thread.currentThread().getName(): " + Thread.currentThread().getName());
                 if(msg.what == PIC_UPLOAD){
                     T token = (T) msg.obj;
                     Log.i(TAG, "received request for file " + mPicRequestMap.get(token));
