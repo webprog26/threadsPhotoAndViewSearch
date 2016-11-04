@@ -1,13 +1,10 @@
 package com.example.webprog26.multithreadingfirsttask;
 
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
-import android.widget.ImageView;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +13,7 @@ import java.util.Map;
  * Created by webprog26 on 01.11.2016.
  */
 
-public class PicsDownloader<T> extends HandlerThread {
+class PicsDownloader<T> extends HandlerThread {
 
     private static final String TAG = "PicsDownloader";
 
@@ -27,15 +24,15 @@ public class PicsDownloader<T> extends HandlerThread {
     private Listener<T> mListener;
 
 
-    public interface Listener<T>{
+    interface Listener<T>{
         void onPicUploaded(T token, Bitmap pic);
     }
 
-    public void setListener(Listener<T> listener) {
+    void setListener(Listener<T> listener) {
         this.mListener = listener;
     }
 
-    public PicsDownloader(Handler responseHandler) {
+    PicsDownloader(Handler responseHandler) {
         super(TAG);
         this.mResponseHandler = responseHandler;
     }
@@ -45,7 +42,7 @@ public class PicsDownloader<T> extends HandlerThread {
      * @param token ImageView
      * @param filePath String
      */
-    public void queuePic(T token, String filePath){
+    void queuePic(T token, String filePath){
         Log.i(TAG, "filePath is: " + filePath);
         mPicRequestMap.put(token, filePath);
 
@@ -77,7 +74,7 @@ public class PicsDownloader<T> extends HandlerThread {
     {
         final String filePath = mPicRequestMap.get(token);
         if(filePath == null) return;
-        final Bitmap bitmap = BitmapUtils.getBitmap(filePath);
+        final Bitmap bitmap = BitmapUtils.getBitmap(filePath, BitmapUtils.THUMB_WIDTH, BitmapUtils.THUMB_HEIGHT);
         Log.i(TAG, "Bitmap created");
 
         mResponseHandler.post(new Runnable() {

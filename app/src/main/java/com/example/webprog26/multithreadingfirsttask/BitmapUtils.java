@@ -4,7 +4,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.provider.MediaStore;
+import android.util.Log;
+
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 /**
  * Created by webprog26 on 31.10.2016.
@@ -12,24 +16,47 @@ import java.io.File;
 
 public class BitmapUtils {
 
-    private static final int THUMB_WIDTH_AND_HEIGHT = 96;
+    public static final int THUMB_WIDTH = 96;
+    public static final int THUMB_HEIGHT = 96;
+    private static final String TAG = "BitmapUtils_TAG";
 
-    /**
-     * Gets thumbnail preview from photo & video files
-     * @param filePath
-     * @return preview Bitmap
-     */
-    public static Bitmap getBitmap(String filePath) {
+    public static Bitmap getBitmap(String filePath, int reqWidth, int reqHeight){
 
-        File bitmapFile = new File(filePath);
-        if(FilesFinder.isPhoto(filePath)){
-            return ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(bitmapFile.getAbsolutePath()), THUMB_WIDTH_AND_HEIGHT, THUMB_WIDTH_AND_HEIGHT);
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+
+        BitmapFactory.decodeFile(filePath, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+
+        return BitmapFactory.decodeFile(filePath, options);
+
+    }
+
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
         }
 
-        if(FilesFinder.isVideo(filePath))
-        {
-            return ThumbnailUtils.createVideoThumbnail(bitmapFile.getAbsolutePath(), MediaStore.Video.Thumbnails.MICRO_KIND);
-        }
-        return null;
+        return inSampleSize;
     }
 }

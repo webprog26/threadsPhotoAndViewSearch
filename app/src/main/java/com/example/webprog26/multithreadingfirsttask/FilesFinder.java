@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * Created by webprog26 on 31.10.2016.
  */
 
-public class FilesFinder {
+class FilesFinder {
 
     private static final String PHOTOS = "jpg";
     private static final String VIDEOS = "3gp";
@@ -44,12 +44,12 @@ public class FilesFinder {
      * Gets list of files on sd card
      * @return array File
      */
-    public static File[] getCameraFiles()
+    static File[] getCameraFiles()
     {
         return new File(getStorageDir().getAbsolutePath(), DECTINATION_FOLDER).listFiles();
     }
 
-    public static ArrayList<String> getFilesPaths(File[] files)
+    static ArrayList<String> getFilesPaths(File[] files)
     {
         ArrayList<String> filePathList = new ArrayList<>();
         for(File file: files)
@@ -64,19 +64,19 @@ public class FilesFinder {
 
     /**
      * Checks file is photo
-     * @param filePath
-     * @return boolean isPhoto
+     * @param filePath {@link String}
+     * @return isPhoto boolean
      */
-    public static boolean isPhoto(String filePath){
+    private static boolean isPhoto(String filePath){
         return filePath.substring(filePath.length() - 3).equals(PHOTOS);
     }
 
     /**
      * Checks file is video
-     * @param filePath
-     * @return boolean isVideo
+     * @param filePath {@link String}
+     * @return isVideo boolean
      */
-    public static boolean isVideo(String filePath){
+    private static boolean isVideo(String filePath){
         return filePath.substring(filePath.length() - 3).equals(VIDEOS);
     }
 }

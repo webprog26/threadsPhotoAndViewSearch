@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Sets adpter to GridView
+     * Sets adapter to GridView
      */
     private void setupAdapter(){
         if(mItems != null){
