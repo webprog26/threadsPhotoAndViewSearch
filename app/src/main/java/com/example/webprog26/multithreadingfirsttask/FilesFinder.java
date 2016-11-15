@@ -12,7 +12,7 @@ class FilesFinder {
 
     private static final String PHOTOS = "jpg";
     private static final String VIDEOS = "3gp";
-    private static final String DECTINATION_FOLDER = "DCIM/Camera";
+    private static final String DECTINATION_FOLDER = "Camera";
 
     /**
      * Checks is sd card available
@@ -35,7 +35,7 @@ class FilesFinder {
     private static File getStorageDir() {
         File sdCard = null;
         if (isExternalStorageReadable()) {
-            sdCard = Environment.getExternalStorageDirectory();
+            sdCard = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString());
         }
         return sdCard;
     }
@@ -46,11 +46,28 @@ class FilesFinder {
      */
     static File[] getCameraFiles()
     {
-        return new File(getStorageDir().getAbsolutePath(), DECTINATION_FOLDER).listFiles();
+        File destinationDir = null;
+        for(File cameraDirectory: getStorageDir().listFiles())
+        {
+            if(cameraDirectory.isDirectory()){
+                if(cameraDirectory.getName().equals(DECTINATION_FOLDER)){
+                    destinationDir = cameraDirectory;
+                    break;
+                }
+            }
+        }
+        return destinationDir.listFiles();
     }
 
+    /**
+     * Adds to ArrayList only photos/ vieos files and returns it
+     * @param files {@link File[]}
+     * @return {@link ArrayList<File>}
+     */
     static ArrayList<String> getFilesPaths(File[] files)
     {
+        if(files == null) return null;
+
         ArrayList<String> filePathList = new ArrayList<>();
         for(File file: files)
         {

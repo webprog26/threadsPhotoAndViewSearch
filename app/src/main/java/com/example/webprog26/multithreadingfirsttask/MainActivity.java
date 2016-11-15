@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 
 
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         mGridView = (GridView) findViewById(R.id.gridView);
 
         OlderTask olderTask = new OlderTask();
-        olderTask.execute();
+        olderTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
 
         mPicsDownloader = new PicsDownloader<>(new Handler());
         mPicsDownloader.setListener(new PicsDownloader.Listener<ImageView>() {
@@ -62,6 +64,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(ArrayList<String> filesPath) {
             super.onPostExecute(filesPath);
+
+            if(filesPath == null){
+                Toast.makeText(MainActivity.this, getResources().getString(R.string.sorry_msg), Toast.LENGTH_LONG).show();
+                return;
+            }
+
             mItems = filesPath;
             Log.i(TAG, "mItems.size(): " + mItems.size());
             setupAdapter();

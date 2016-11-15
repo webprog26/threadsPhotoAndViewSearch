@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MultithreadingFirstTask</string>
+    <string name="sorry_msg">Sorry. For my developer\'s curves hands, you can\'t process with your photos</string>
 </resources>
